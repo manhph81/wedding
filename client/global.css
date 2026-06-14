@@ -1,0 +1,56 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/**
+ * Design tokens cho thiệp cưới (HSL, không có hàm hsl() để Tailwind ghép alpha).
+ * Tông chủ đạo: nền trắng kem, nhấn hồng nâu (rosy) + vàng champagne.
+ */
+@layer base {
+  :root {
+    --bg: 40 33% 98%; /* trắng kem */
+    --surface: 0 0% 100%;
+    --ink: 25 15% 20%; /* nâu mực */
+    --muted: 25 8% 45%;
+    --primary: 0 24% 47%; /* #965D5D rosy-brown */
+    --primary-foreground: 0 0% 100%;
+    --gold: 38 45% 60%; /* champagne gold */
+    --rose: 350 50% 80%;
+    --border: 30 20% 88%;
+  }
+
+  html {
+    scroll-behavior: smooth;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  body {
+    @apply bg-bg text-ink font-sans antialiased;
+  }
+
+  /* WCAG 2.3.3 — tôn trọng prefers-reduced-motion (tắt hiệu ứng rơi/auto-scroll) */
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+
+  :focus-visible {
+    outline: 2px solid hsl(var(--primary));
+    outline-offset: 2px;
+  }
+}
+
+@layer components {
+  /* Khung "thiệp" căn giữa — mobile-first 380px, desktop tối đa 480px */
+  .card-shell {
+    @apply mx-auto w-full max-w-[480px] bg-surface shadow-xl min-h-screen relative overflow-hidden;
+  }
+}

@@ -1,0 +1,16 @@
+# Dev image — Node + pnpm (qua corepack). Dùng cho hot-reload trong Docker.
+FROM node:22-bookworm-slim
+
+# pnpm 9 qua corepack (pnpm 11 cần Node>=22.13 + có build-gate gây lỗi CI).
+RUN corepack enable && corepack prepare pnpm@9.15.9 --activate
+
+WORKDIR /app
+
+# Cài deps trước (tận dụng layer cache); source mount lúc runtime qua compose.
+COPY package.json ./
+RUN pnpm install
+
+EXPOSE 8081 8000
+
+# Chạy client (:8081) + mock API (:8000) song song.
+CMD ["pnpm", "dev:all"]

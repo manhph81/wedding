@@ -1,0 +1,178 @@
+/**
+ * Cấu hình thiệp cưới — tách dữ liệu khỏi code: MỘT template, NHIỀU thiệp.
+ * Đổi cặp đôi/sự kiện/ảnh/STK/hiệu ứng chỉ sửa file này (hoặc nạp từ API).
+ *
+ * Dữ liệu dưới đây là MẪU/placeholder — KHÔNG phải dữ liệu thật của 2 site gốc.
+ */
+
+export type Person = {
+  role: "groom" | "bride";
+  name: string;
+  fullName: string;
+  bio?: string;
+  photo: string;
+  parents?: { father?: string; mother?: string };
+};
+
+export type StoryMilestone = {
+  date: string;
+  title: string;
+  body: string;
+  photo?: string;
+};
+
+export type WeddingEvent = {
+  side: "groom" | "bride";
+  title: string;
+  /** ISO datetime cho countdown + add-to-calendar. */
+  datetime: string;
+  /** Hiển thị ngày dương + âm lịch. */
+  solarDate: string;
+  lunarDate?: string;
+  venue: string;
+  address: string;
+  mapUrl?: string;
+};
+
+export type BankAccount = {
+  side: "groom" | "bride";
+  holder: string;
+  bank: string;
+  accountNumber: string;
+  /** URL ảnh QR (VietQR / api.qrserver.com). Để trống → sinh từ STK. */
+  qrUrl?: string;
+};
+
+export type EffectSettings = {
+  music: { enabled: boolean; src: string; autoPlay: boolean };
+  falling: { enabled: boolean; color: string; density: number; speed: number };
+  autoScroll: { enabled: boolean; speed: number };
+  envelope: { enabled: boolean };
+  guestNotification: { enabled: boolean };
+};
+
+export type WeddingConfig = {
+  /** Phân biệt biến thể layout: "modern" (MeHappy) | "classic" (iWedding). */
+  variant: "modern" | "classic";
+  locale: "vi";
+  seo: { title: string; description: string; ogImage?: string };
+  couple: { groom: Person; bride: Person };
+  /** Ngày cưới chính cho hero + countdown (ISO). */
+  weddingDate: string;
+  hero: { coverPhoto: string; tagline: string };
+  invitation: { greeting: string };
+  story: StoryMilestone[];
+  events: WeddingEvent[];
+  gallery: string[];
+  gifts: BankAccount[];
+  effects: EffectSettings;
+};
+
+/** Ảnh placeholder (picsum) — thay bằng ảnh cưới thật khi triển khai. */
+const ph = (seed: string, w = 800, h = 1000) =>
+  `https://picsum.photos/seed/${seed}/${w}/${h}`;
+
+export const weddingConfig: WeddingConfig = {
+  variant: "modern",
+  locale: "vi",
+  seo: {
+    title: "Thư mời cưới • Diên Tuấn & Khánh Linh",
+    description:
+      "Trân trọng kính mời bạn đến chung vui trong ngày hạnh phúc của chúng tôi.",
+    ogImage: ph("cover", 1200, 630),
+  },
+  weddingDate: "2026-12-20T11:00:00+07:00",
+  hero: {
+    coverPhoto: ph("cover"),
+    tagline: "We're getting married",
+  },
+  invitation: {
+    greeting: "Trân trọng kính mời",
+  },
+  couple: {
+    groom: {
+      role: "groom",
+      name: "Diên Tuấn",
+      fullName: "Hồ Diên Tuấn",
+      bio: "Chàng trai yêu thích sự bình yên và những chuyến đi.",
+      photo: ph("groom"),
+      parents: { father: "Ông Hồ Văn A", mother: "Bà Lê Thị B" },
+    },
+    bride: {
+      role: "bride",
+      name: "Khánh Linh",
+      fullName: "Hoàng Thị Khánh Linh",
+      bio: "Cô gái dịu dàng, thích cà phê và ánh nắng buổi sáng.",
+      photo: ph("bride"),
+      parents: { father: "Ông Hoàng Văn C", mother: "Bà Phạm Thị D" },
+    },
+  },
+  story: [
+    {
+      date: "Mùa đông 2020",
+      title: "Lần đầu gặp gỡ",
+      body: "Tình cờ quen nhau qua một người bạn chung, và rồi mọi thứ bắt đầu.",
+      photo: ph("story1", 700, 500),
+    },
+    {
+      date: "2022",
+      title: "Hẹn hò",
+      body: "Những buổi tối đi dạo, những chuyến đi xa cùng nhau.",
+      photo: ph("story2", 700, 500),
+    },
+    {
+      date: "Tháng 10, 2025",
+      title: "Lời cầu hôn",
+      body: "Dưới ánh hoàng hôn, anh đã ngỏ lời và em gật đầu.",
+      photo: ph("story3", 700, 500),
+    },
+  ],
+  events: [
+    {
+      side: "bride",
+      title: "Lễ Vu Quy (Nhà gái)",
+      datetime: "2026-12-19T10:00:00+07:00",
+      solarDate: "19/12/2026",
+      lunarDate: "01/11 Âm lịch",
+      venue: "Tư gia nhà gái",
+      address: "Số 1, Đường ABC, Quận X, TP. HCM",
+      mapUrl: "https://maps.google.com/?q=10.762622,106.660172",
+    },
+    {
+      side: "groom",
+      title: "Lễ Thành Hôn (Nhà trai)",
+      datetime: "2026-12-20T11:00:00+07:00",
+      solarDate: "20/12/2026",
+      lunarDate: "02/11 Âm lịch",
+      venue: "Trung tâm tiệc cưới DEF",
+      address: "Số 99, Đường XYZ, Quận Y, TP. HCM",
+      mapUrl: "https://maps.google.com/?q=10.776889,106.700806",
+    },
+  ],
+  gallery: Array.from({ length: 8 }, (_, i) => ph(`gallery${i + 1}`, 600, 800)),
+  gifts: [
+    {
+      side: "groom",
+      holder: "HO DIEN TUAN",
+      bank: "Vietcombank",
+      accountNumber: "0123456789",
+    },
+    {
+      side: "bride",
+      holder: "HOANG THI KHANH LINH",
+      bank: "Techcombank",
+      accountNumber: "9876543210",
+    },
+  ],
+  effects: {
+    music: {
+      enabled: true,
+      src: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3",
+      autoPlay: true,
+    },
+    falling: { enabled: true, color: "#965D5D", density: 18, speed: 8 },
+    autoScroll: { enabled: false, speed: 5 },
+    envelope: { enabled: true },
+    guestNotification: { enabled: true },
+  },
+};
