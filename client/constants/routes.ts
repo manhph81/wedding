@@ -5,6 +5,7 @@
 export const ROUTES = {
   home: "/", // clone modern (kiểu MeHappy / Site B)
   classic: "/classic", // clone classic (kiểu iWedding / Site A)
+  admin: "/admin", // dashboard xem danh sách RSVP
 } as const;
 
 export type RoutePath = (typeof ROUTES)[keyof typeof ROUTES];

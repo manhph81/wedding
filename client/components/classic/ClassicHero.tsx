@@ -1,14 +1,11 @@
 import { ChevronDown } from "lucide-react";
+import { dateFromIso } from "@/lib/datetime";
 import type { WeddingConfig } from "@/constants/weddingConfig";
 
 /** Hero full-screen kiểu iWedding — "We're getting married" + Save the date. */
 export function ClassicHero({ config }: { config: WeddingConfig }) {
   const { groom, bride } = config.couple;
-  const date = new Date(config.weddingDate).toLocaleDateString("vi-VN", {
-    day: "2-digit",
-    month: "2-digit",
-    year: "numeric",
-  });
+  const date = dateFromIso(config.weddingDate);
 
   return (
     <section

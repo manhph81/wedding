@@ -2,6 +2,17 @@ node_modules
 dist
 .DS_Store
 *.local
+
+# env (giữ .env.example để tham khảo, KHÔNG commit secret thật)
 .env
+.env.*
+!.env.example
+
+# build / cache
 .vite
 coverage
+*.tsbuildinfo
+.pnpm-store
+
+# Vercel CLI (project link + env pull cục bộ)
+.vercel

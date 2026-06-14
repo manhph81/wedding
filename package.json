@@ -4,6 +4,9 @@
   "version": "0.0.1",
   "type": "module",
   "packageManager": "pnpm@9.15.9",
+  "engines": {
+    "node": "22.x"
+  },
   "scripts": {
     "dev": "vite",
     "dev:server": "tsx watch server/node-build.ts",
@@ -11,6 +14,7 @@
     "build": "vite-react-ssg build",
     "build:server": "tsc -p server/tsconfig.json",
     "start": "node dist/server/node-build.mjs",
+    "migrate": "tsx server/db/migrate.ts",
     "preview": "vite preview --host 127.0.0.1 --port 4173 --strictPort",
     "test": "vitest run",
     "test:watch": "vitest",
@@ -25,7 +29,9 @@
     "date-fns": "^4.3.0",
     "express": "^5.1.0",
     "framer-motion": "^12.23.12",
+    "@neondatabase/serverless": "^0.10.4",
     "lucide-react": "^0.539.0",
+    "pg": "^8.13.1",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-hook-form": "^7.62.0",
@@ -41,7 +47,9 @@
     "@testing-library/react": "^16.1.0",
     "@testing-library/user-event": "^14.5.2",
     "@types/express": "^5.0.0",
+    "@vercel/node": "^5.1.0",
     "@types/node": "^22.10.5",
+    "@types/pg": "^8.11.10",
     "@types/react": "^18.3.18",
     "@types/react-dom": "^18.3.5",
     "@vitejs/plugin-react": "^4.3.4",

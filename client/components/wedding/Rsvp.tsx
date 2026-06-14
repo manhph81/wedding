@@ -12,7 +12,11 @@ import { ApiError } from "@/lib/api";
 const schema = z.object({
   name: z.string().trim().min(1, "Vui lòng nhập tên"),
   attendance: z.enum(["yes", "no"]),
-  guests: z.coerce.number().int().min(1, "Tối thiểu 1 người").max(20),
+  // Để trống → hiện placeholder; bỏ trống khi submit sẽ mặc định = 1 (xử lý ở onSubmit).
+  guests: z.preprocess(
+    (v) => (v === "" || v === undefined || v === null ? undefined : Number(v)),
+    z.number().int().min(1, "Tối thiểu 1 người").max(20, "Tối đa 20 người").optional(),
+  ),
   side: z.enum(["groom", "bride", "both"]).optional(),
   message: z.string().trim().max(500).optional(),
 });
@@ -29,17 +33,24 @@ export function Rsvp() {
     formState: { errors },
   } = useForm<FormValues>({
     resolver: zodResolver(schema),
-    defaultValues: { attendance: "yes", guests: 1 },
+    defaultValues: { attendance: "yes" },
   });
 
   const onSubmit = (values: FormValues) => {
-    rsvp.mutate(values, {
+    // Bỏ trống "số người" → mặc định 1 người.
+    rsvp.mutate(
+      { ...values, guests: values.guests ?? 1 },
+      {
       onSuccess: () => {
         toast.success("Cảm ơn bạn đã xác nhận!");
-        reset({ attendance: "yes", guests: 1 });
+        reset({ attendance: "yes" });
       },
       onError: (err) =>
-        toast.error(err instanceof ApiError ? err.message : "Có lỗi xảy ra"),
+        toast.error(
+          err instanceof ApiError && err.message
+            ? err.message
+            : "Không gửi được, vui lòng thử lại",
+        ),
     });
   };
 

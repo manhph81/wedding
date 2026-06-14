@@ -1,0 +1,42 @@
+# DB stack — Postgres + migration runner.
+#
+# Chạy riêng (chỉ DB + migrate):
+#   docker compose -f docker-compose.db.yaml up
+#
+# Được `docker-compose.yml` include sẵn → `docker compose up` chạy cả web + DB.
+services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: wedding
+      POSTGRES_PASSWORD: wedding
+      POSTGRES_DB: wedding
+    ports:
+      - "5433:5432" # host:5433 (tránh đụng Postgres khác đang dùng 5432)
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U wedding -d wedding"]
+      interval: 3s
+      timeout: 3s
+      retries: 20
+
+  # Migration chạy một lần rồi thoát (apply các file db/migrations/*.sql).
+  migrate:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      DATABASE_URL: postgres://wedding:wedding@db:5432/wedding
+    volumes:
+      - .:/app
+      - node_modules:/app/node_modules
+    command: sh -c "pnpm install && pnpm migrate"
+    restart: "no"
+
+volumes:
+  pgdata:
+  node_modules:

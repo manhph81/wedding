@@ -34,6 +34,7 @@ export default function Wedding() {
         <Envelope
           groomName={c.couple.groom.name}
           brideName={c.couple.bride.name}
+          coverPhoto={c.hero.coverPhoto}
           musicEnabled={fx.music.enabled}
         />
       )}

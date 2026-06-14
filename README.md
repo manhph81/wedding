@@ -25,19 +25,48 @@ pnpm dev:server   # mock API :8000 (bắt buộc cho /api/* — RSVP, lời chú
 
 Cá nhân hoá tên khách: `http://localhost:8081/?guest=Anh+Minh`.
 
+**Admin dashboard** (xem danh sách RSVP + thống kê): `http://localhost:8081/admin` (Docker: `http://localhost:8090/admin`). Cần đăng nhập — mặc định **`toibingu` / `toibingu`** (đổi qua env `ADMIN_USER` / `ADMIN_PASS`). API `GET /rsvp` yêu cầu Bearer token; trang đặt `noindex`.
+
 > Khi chạy bằng Docker, cổng host là **8090** (xem mục Docker), nên dùng `http://localhost:8090/` và `http://localhost:8090/classic`.
 
 ## Chạy bằng Docker (không cần cài Node trên máy)
 
 ```bash
-docker compose up -d        # build + chạy client + mock API trong container
-docker compose logs -f web  # xem log
-docker compose down         # dừng
+docker compose up -d        # chạy db → migrate → web (tự xếp thứ tự)
+docker compose logs -f web  # xem log web
+docker compose down         # dừng (giữ dữ liệu DB)
+docker compose down -v      # dừng + XOÁ dữ liệu DB + node_modules
 ```
 
 - App: **http://localhost:8090/** (modern) · **http://localhost:8090/classic** (classic)
-- Cổng host: client **8090**, mock API **8010** (cổng nội bộ container vẫn 8081/8000 nên proxy `/api` chạy bình thường). Đổi tại [`docker-compose.yml`](./docker-compose.yml).
-- Chạy lệnh trong container: `docker compose exec -T web pnpm <typecheck|build|test>`.
+- Cổng host: client **8090**, API **8010**, Postgres **5433** (cổng nội bộ container vẫn 8081/8000/5432 nên proxy `/api` chạy bình thường). Đổi tại [`docker-compose.yml`](./docker-compose.yml) / [`docker-compose.db.yaml`](./docker-compose.db.yaml).
+- Chạy lệnh trong container: `docker compose exec -T web pnpm <typecheck|build|test|migrate>`.
+
+## Database (PostgreSQL) + migration
+
+API lưu **lời chúc** và **RSVP** vào Postgres thật (không còn in-memory).
+
+```
+db/migrations/          # các file .sql áp dụng tuần tự
+  0001_init.sql         #   tạo bảng wishes + rsvps (id uuid)
+  0002_seed.sql         #   chèn 1 lời chúc mẫu nếu trống
+server/db/pool.ts       # pg Pool (đọc DATABASE_URL)
+server/db/migrate.ts    # runner: track version trong schema_migrations (idempotent)
+```
+
+```bash
+# Chỉ dựng DB + chạy migration (không web):
+docker compose -f docker-compose.db.yaml up
+
+# Thêm migration mới: tạo db/migrations/0003_xxx.sql rồi:
+docker compose exec -T web pnpm migrate     # (hoặc up lại — service migrate tự chạy)
+
+# Xem dữ liệu:
+docker compose exec db psql -U wedding -d wedding -c "select * from wishes;"
+```
+
+`DATABASE_URL` mặc định trong Docker: `postgres://wedding:wedding@db:5432/wedding`
+(ngoài Docker dùng `@localhost:5433`). Xem [`.env.example`](./.env.example).
 
 ## Scripts
 

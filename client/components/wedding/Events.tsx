@@ -1,6 +1,7 @@
 import { CalendarDays, Clock, MapPin } from "lucide-react";
 import { Section, SectionTitle } from "@/components/ui/section";
 import { Button } from "@/components/ui/button";
+import { timeFromIso } from "@/lib/datetime";
 import type { WeddingEvent } from "@/constants/weddingConfig";
 
 /** Sự kiện cưới — giờ, ngày dương/âm, địa điểm, chỉ đường. */
@@ -25,10 +26,7 @@ export function Events({ events }: { events: WeddingEvent[] }) {
               </p>
               <p className="flex items-center justify-center gap-2">
                 <Clock size={15} className="text-gold" />
-                {new Date(e.datetime).toLocaleTimeString("vi-VN", {
-                  hour: "2-digit",
-                  minute: "2-digit",
-                })}
+                {timeFromIso(e.datetime)}
               </p>
               <p className="flex items-center justify-center gap-2">
                 <MapPin size={15} className="text-gold" />

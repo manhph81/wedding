@@ -2,7 +2,7 @@ import { Outlet } from "react-router-dom";
 import type { RouteRecord } from "vite-react-ssg";
 import { ROUTES } from "@/constants/routes";
 import { AppProviders } from "./app/providers";
-import { Wedding, Classic } from "./pages";
+import { Wedding, Classic, Admin } from "./pages";
 
 /** Root layout — AppProviders (QueryClient + Helmet + Toaster) bọc route tree. */
 function RootLayout() {
@@ -24,6 +24,11 @@ export const routes: RouteRecord[] = [
         path: ROUTES.classic,
         element: <Classic />,
         entry: "client/pages/Classic.tsx",
+      },
+      {
+        path: ROUTES.admin,
+        element: <Admin />,
+        entry: "client/pages/Admin.tsx",
       },
     ],
   },

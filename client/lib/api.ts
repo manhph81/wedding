@@ -50,7 +50,9 @@ async function request<T>(
     } catch {
       // body not JSON — ignore
     }
-    throw new ApiError(res.status, errBody?.message ?? res.statusText, {
+    // statusText có thể rỗng (HTTP/2) → luôn fallback ra message có ý nghĩa.
+    const message = errBody?.message || res.statusText || `Lỗi ${res.status}`;
+    throw new ApiError(res.status, message, {
       messageId: errBody?.message_id,
       body: errBody,
     });

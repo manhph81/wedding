@@ -68,9 +68,23 @@ export type WeddingConfig = {
   effects: EffectSettings;
 };
 
-/** Ảnh placeholder (picsum) — thay bằng ảnh cưới thật khi triển khai. */
-const ph = (seed: string, w = 800, h = 1000) =>
-  `https://picsum.photos/seed/${seed}/${w}/${h}`;
+/**
+ * Ảnh cưới mẫu (Unsplash, free license) — thay bằng ảnh thật khi triển khai.
+ * `img(id, w, h)` ghép URL Unsplash đã crop đúng tỉ lệ.
+ */
+const img = (id: string, w = 800, h = 1000) =>
+  `https://images.unsplash.com/photo-${id}?auto=format&fit=crop&w=${w}&h=${h}&q=75`;
+
+const GALLERY_IDS = [
+  "1511285560929-80b456fea0bc",
+  "1519741497674-611481863552",
+  "1606216794074-735e91aa2c92",
+  "1583939003579-730e3918a45a",
+  "1525258946800-98cfd641d0de",
+  "1606800052052-a08af7148866",
+  "1460978812857-470ed1c77af0",
+  "1532712938310-34cb3982ef74",
+];
 
 export const weddingConfig: WeddingConfig = {
   variant: "modern",
@@ -79,11 +93,11 @@ export const weddingConfig: WeddingConfig = {
     title: "Thư mời cưới • Diên Tuấn & Khánh Linh",
     description:
       "Trân trọng kính mời bạn đến chung vui trong ngày hạnh phúc của chúng tôi.",
-    ogImage: ph("cover", 1200, 630),
+    ogImage: img("1519225421980-715cb0215aed", 1200, 630),
   },
   weddingDate: "2026-12-20T11:00:00+07:00",
   hero: {
-    coverPhoto: ph("cover"),
+    coverPhoto: img("1519225421980-715cb0215aed", 1000, 1300),
     tagline: "We're getting married",
   },
   invitation: {
@@ -95,7 +109,7 @@ export const weddingConfig: WeddingConfig = {
       name: "Diên Tuấn",
       fullName: "Hồ Diên Tuấn",
       bio: "Chàng trai yêu thích sự bình yên và những chuyến đi.",
-      photo: ph("groom"),
+      photo: img("1522673607200-164d1b6ce486"),
       parents: { father: "Ông Hồ Văn A", mother: "Bà Lê Thị B" },
     },
     bride: {
@@ -103,7 +117,7 @@ export const weddingConfig: WeddingConfig = {
       name: "Khánh Linh",
       fullName: "Hoàng Thị Khánh Linh",
       bio: "Cô gái dịu dàng, thích cà phê và ánh nắng buổi sáng.",
-      photo: ph("bride"),
+      photo: img("1537633552985-df8429e8048b"),
       parents: { father: "Ông Hoàng Văn C", mother: "Bà Phạm Thị D" },
     },
   },
@@ -112,19 +126,19 @@ export const weddingConfig: WeddingConfig = {
       date: "Mùa đông 2020",
       title: "Lần đầu gặp gỡ",
       body: "Tình cờ quen nhau qua một người bạn chung, và rồi mọi thứ bắt đầu.",
-      photo: ph("story1", 700, 500),
+      photo: img("1535254973040-607b474cb50d", 700, 500),
     },
     {
       date: "2022",
       title: "Hẹn hò",
       body: "Những buổi tối đi dạo, những chuyến đi xa cùng nhau.",
-      photo: ph("story2", 700, 500),
+      photo: img("1591604466107-ec97de577aff", 700, 500),
     },
     {
       date: "Tháng 10, 2025",
       title: "Lời cầu hôn",
       body: "Dưới ánh hoàng hôn, anh đã ngỏ lời và em gật đầu.",
-      photo: ph("story3", 700, 500),
+      photo: img("1519671482749-fd09be7ccebf", 700, 500),
     },
   ],
   events: [
@@ -149,7 +163,7 @@ export const weddingConfig: WeddingConfig = {
       mapUrl: "https://maps.google.com/?q=10.776889,106.700806",
     },
   ],
-  gallery: Array.from({ length: 8 }, (_, i) => ph(`gallery${i + 1}`, 600, 800)),
+  gallery: GALLERY_IDS.map((id) => img(id, 600, 800)),
   gifts: [
     {
       side: "groom",
@@ -167,7 +181,8 @@ export const weddingConfig: WeddingConfig = {
   effects: {
     music: {
       enabled: true,
-      src: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3",
+      // Pachelbel — Canon in D (Kevin MacLeod, public domain, Wikimedia). Nhẹ nhàng.
+      src: "https://upload.wikimedia.org/wikipedia/commons/c/c6/Canon_in_D_Major_%28ISRC_USUAN1100301%29.mp3",
       autoPlay: true,
     },
     falling: { enabled: true, color: "#965D5D", density: 18, speed: 8 },

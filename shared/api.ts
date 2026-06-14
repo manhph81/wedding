@@ -28,6 +28,20 @@ export type Rsvp = RsvpInput & { id: string; createdAt: string };
 
 export type RsvpResponse = { ok: true; rsvp: Rsvp };
 
+/** Danh sách RSVP + thống kê (admin dashboard). */
+export type RsvpStats = {
+  attending: number;
+  notAttending: number;
+  /** Tổng số khách (cộng `guests` của các phiếu tham dự). */
+  totalGuests: number;
+};
+export type RsvpListResponse = { rsvps: Rsvp[]; stats: RsvpStats };
+
+/* ────────────────────────────  Admin auth  ──────────────────────────── */
+
+export type AdminLoginInput = { username: string; password: string };
+export type AdminLoginResponse = { token: string };
+
 /* ────────────────────────────  Wishes  ──────────────────────────── */
 
 /** Lời chúc (sổ lưu bút). */

@@ -6,4 +6,5 @@ export const API_PATHS = {
   health: "/health",
   rsvp: "/rsvp",
   wishes: "/wishes",
+  adminLogin: "/admin/login",
 } as const;

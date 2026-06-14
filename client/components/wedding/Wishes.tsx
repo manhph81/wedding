@@ -32,7 +32,11 @@ export function Wishes() {
         reset({ name: "", message: "" });
       },
       onError: (err) =>
-        toast.error(err instanceof ApiError ? err.message : "Có lỗi xảy ra"),
+        toast.error(
+          err instanceof ApiError && err.message
+            ? err.message
+            : "Không gửi được, vui lòng thử lại",
+        ),
     });
   };
 
